@@ -11,7 +11,7 @@ import pandas as pd
 
 
 print()
-def zapros(link):
+def zapros(link:str):
     """Проверяет доступность для работы сраницы и выводит  responce"""
     header = {'User-Agent':"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.115 Safari/537.36 OPR/88.0.4412.74"}
     sait = requests.get(link, headers=header)
@@ -44,22 +44,21 @@ def open_file(path):
 
 
 
-def saver_file(text):   #сохраняем данные в новый файл
+def saver_file(text:str):   #сохраняем данные в новый файл
     """Сохраняет полученный результат в файл/таблицу"""
 
     try:
         with open('text.txt', 'a') as f:
             f.write(text + '\n')
-        print('sucsess')
+
     except Exception as e:
         print(f'Неудалось сохранить текст в файл, причина: {e}')
 
 
-
 def parsing(list_file):
     """ """
-    #for i in list_file:
-    #   print(i) - путь к файлу в текущей директории
+    #for dict_in in list_file:
+    #   print(dict_in) - путь к файлу в текущей директории
     try:
         dict_inn = open_file(list_file[1])  # list_file[0] - юр лицо ,list_file[0] - ипешники
     except Exception as e:
@@ -87,15 +86,18 @@ def parsing(list_file):
                     p_value = td_list[0].find_all('p')  # Получаем из списока значение/результат
                     # print(p_value)
                     for i in p_value:
-                        if i.text == 'н/д ':
-                            information_to_save = f'{id+1} по данному ИНН {inn} -> нет данных'
+                        if f"{i.text.strip()}" == "н/д":
+                            information_to_save = f"{id+1} по данному ИНН {inn} ->  Недействующий "
                             saver_file(information_to_save)    #запиысываемы нужные данные в файл
-                            print(f'{id+1} по данному ИНН {inn} -> нет данных')
+                            print(f'{id+1} по данному ИНН {inn} -> {i.text}. SAVE TO file')
+
                         else:
                             print(f'{id+1} по данному ИНН {inn} -> {i.text}')
+
                 except Exception as e:
                     print(f'{id+1} по данному ИНН {inn} -> "ненайдено" ->{e}')  # list index out of range"""
-
+                    information_to_save = f"{id + 1} по данному ИНН {inn} -> ненайдено данных, требуется уточнение по ФИО"
+                    saver_file(information_to_save)  # запиысываемы нужные данные в файл
 
     except Exception as e:
         print(f'Ошибка проверки/обработки данных на сайте: {e}')
