@@ -31,7 +31,6 @@ def find_file_in_folder() :
         print(f"Ненайдены файлы с расширением '.ods' в текущей директории. Ошибка ->  {e}")
 
 
-
 def open_file(path):
     """Обработчик файла Exel который достает данные и сохраняет в словарь инн для обработки """
 
@@ -44,11 +43,16 @@ def open_file(path):
     return (dict_inn)
 
 
-def saver_file():   #сохраняем данные в новый файл
-    """Сохраняет полученный результат в файл/таблицу"""
-    path = './' #.txt name=openfile
 
-    pass
+def saver_file(text):   #сохраняем данные в новый файл
+    """Сохраняет полученный результат в файл/таблицу"""
+
+    try:
+        with open('text.txt', 'a') as f:
+            f.write(text + '\n')
+        print('sucsess')
+    except Exception as e:
+        print(f'Неудалось сохранить текст в файл, причина: {e}')
 
 
 
@@ -57,7 +61,7 @@ def parsing(list_file):
     #for i in list_file:
     #   print(i) - путь к файлу в текущей директории
     try:
-        dict_inn = open_file(list_file[0])  # list_file[0] - юр лицо ,list_file[0] - ипешники
+        dict_inn = open_file(list_file[1])  # list_file[0] - юр лицо ,list_file[0] - ипешники
     except Exception as e:
         print(f'Неудалось получить данные из файла Exel, причина: {e}')
 
@@ -84,6 +88,8 @@ def parsing(list_file):
                     # print(p_value)
                     for i in p_value:
                         if i.text == 'н/д ':
+                            information_to_save = f'{id+1} по данному ИНН {inn} -> нет данных'
+                            saver_file(information_to_save)    #запиысываемы нужные данные в файл
                             print(f'{id+1} по данному ИНН {inn} -> нет данных')
                         else:
                             print(f'{id+1} по данному ИНН {inn} -> {i.text}')
@@ -101,6 +107,7 @@ try:
     if str(zapros(link)) == '<Response [200]>':
         print('Соединение установленo')
         parsing(find_file_in_folder())
+
 
 except Exception as e:
     print(f'Не удалось подключиться к сайту: {e}')
