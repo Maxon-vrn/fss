@@ -17,7 +17,7 @@ def zapros(link:str):
     sait = requests.get(link, headers=header)
     return sait
 
-def find_file_in_folder() :
+def find_file_in_folder() -> list:
     """Исчет в текущей директории файлы с расширениеом .ods и сохраняет в список"""
     path = './' #путь в текущей директории
     try:
@@ -48,7 +48,7 @@ def saver_file(text:str):   #сохраняем данные в новый фа�
     """Сохраняет полученный результат в файл/таблицу"""
 
     try:
-        with open('text.txt', 'a') as f:
+        with open('new_file.txt', 'a') as f:
             f.write(text + '\n')
 
     except Exception as e:
@@ -60,7 +60,7 @@ def parsing(list_file):
     #for dict_in in list_file:
     #   print(dict_in) - путь к файлу в текущей директории
     try:
-        dict_inn = open_file(list_file[1])  # list_file[0] - юр лицо ,list_file[0] - ипешники
+        dict_inn = open_file(list_file[0])  # list_file[0] - юр лицо ,list_file[0] - ипешники
     except Exception as e:
         print(f'Неудалось получить данные из файла Exel, причина: {e}')
 
@@ -75,7 +75,7 @@ def parsing(list_file):
 
                 # открываем страницу с уже вставленным значением инн
                 driver.get(url)  # Открываем страницу
-                time.sleep(2)
+                time.sleep(3)   #пауза на прогрузку страницы
 
                 # парсим страницу для уточнения статуса по инн
                 soup = BeautifulSoup(driver.page_source, 'html.parser')  # Получаем готовый html и парсим его
