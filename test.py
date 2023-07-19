@@ -89,7 +89,7 @@ def parsing(list_file):
                         if f"{i.text.strip()}" == "н/д":
                             information_to_save = f"{id+1} по данному ИНН {inn} ->  Недействующий "
                             saver_file(information_to_save)    #запиысываемы нужные данные в файл
-                            print(f'{id+1} по данному ИНН {inn} -> {i.text}. SAVE TO file')
+                            print(f'{id+1} по данному ИНН {inn} -> {i.text}. Сохраняем в файл')
 
                         else:
                             print(f'{id+1} по данному ИНН {inn} -> {i.text}')
