@@ -44,12 +44,17 @@ def open_file(path):
 
 
 
-def saver_file(text:str):   #сохраняем данные в новый файл
+def saver_file(name_file: str,text:str):   #сохраняем данные в новый файл
     """Сохраняет полученный результат в файл/таблицу"""
 
     try:
-        with open('new_file.txt', 'a') as f:
-            f.write(text + '\n')
+        if not os.path.exists(f'./{name_file}'):
+            os.makedirs(f'./результат обработки/{name_file}')  # создаем папку
+            with open(f'./{name_file}/text.txt', 'a') as f:  # создаем файл в папке
+                f.write(text + '\n')
+        else:
+            with open(f'./результат обработки/{name_file}/text.txt', 'a') as f:  # создаем файл в папке
+                f.write(text + '\n')
 
     except Exception as e:
         print(f'Неудалось сохранить текст в файл, причина: {e}')
@@ -87,15 +92,26 @@ def parsing(list_file):
                     # print(p_value)
                     for i in p_value:
                         if f"{i.text.strip()}" == "н/д":
-                            information_to_save = f"{id+1} по данному ИНН {inn} ->  Недействующий "
-                            saver_file(information_to_save)    #запиысываемы нужные данные в файл
+                            information_to_save = f"{id+1} по данному ИНН {inn} ->  {i.text.strip()} "
+                            saver_file(i.text.strip(),information_to_save)    #запиысываемы нужные данные в файл
                             print(f'{id+1} по данному ИНН {inn} -> {i.text}. Сохраняем в файл')
 
                         else:
                             print(f'{id+1} по данному ИНН {inn} -> {i.text}')
+                            information_to_save = f"{id + 1} по данному ИНН {inn} ->  {i.text.strip()}"
+                            try:
+                                # проверка папки на существование и запись в нее файла
+                                if not os.path.exists(f'./результат обработки/{i.text.strip()[:91]}'):
+                                    os.makedirs(f'./результат обработки/{i.text.strip()[:91]}')  # создаем папку
+                                with open(f'./результат обработки/{i.text.strip()[:91]}/text.txt', 'a') as f:  # создаем файл в папке
+                                    f.write(information_to_save + '\n')  # дописываем данные в файл
+
+                            except Exception as e:
+                                print(f'Не удалось найти или создать папку: {e}')
+
 
                 except Exception as e:
-                    print(f'{id+1} по данному ИНН {inn} -> "ненайдено" ->{e}')  # list index out of range"""
+                    print(f'{id+1} по данному ИНН {inn} -> "ненайдено данных" ->{e}')  # list index out of range"""
                     information_to_save = f"{id + 1} по данному ИНН {inn} -> ненайдено данных, требуется уточнение по ФИО"
                     saver_file(information_to_save)  # запиысываемы нужные данные в файл
 
